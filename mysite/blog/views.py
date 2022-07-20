@@ -4,11 +4,13 @@ from django.views import View
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
+from taggit.models import Tag
 from .models import Post, Comment
 from .forms import EmailPostForm, CommentForm
 
 
 class PostListView(ListView):
+
     queryset = Post.published.all()
     context_object_name = 'posts'
     paginate_by = 3
