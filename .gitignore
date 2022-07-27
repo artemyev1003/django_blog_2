@@ -1,0 +1,11 @@
+.idea/
+venv
+mysite/db.sqlite3
+mysite/mysite/.env
+mysite/mysite/__pycache__
+blog/__pycache__/
+mysite/blog/management/__pycache__/
+mysite/blog/management/commands/__pycache__/
+mysite/blog/migrations/__pycache__/
+mysite/blog/templatetags/__pycache__/
+mysite/blog/__pycache__/

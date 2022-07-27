@@ -1,9 +1,0 @@
-venv
-db.sqlite3
-mysite/mysite/.env
-mysite/__pycache__
-blog/__pycache__/
-blog/management/__pycache__/
-blog/management/commands/__pycache__/
-blog/migrations/__pycache__/
-.idea/
