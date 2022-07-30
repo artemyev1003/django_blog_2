@@ -15,4 +15,5 @@ class Command(BaseCommand):
                 title=d.sentence(nb_words=5),
                 author=User.objects.get(id=1),
                 body=d.paragraph(nb_sentences=10),
+                status='published',
             )
