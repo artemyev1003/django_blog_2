@@ -1,14 +1,15 @@
 from django.db.models import Count
+from django.db.models.functions import Greatest
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
-from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
+from django.contrib.postgres.search import TrigramSimilarity
 from taggit.models import Tag
-from .models import Post, Comment
-from .forms import EmailPostForm, CommentForm
+from .models import Post
+from .forms import EmailPostForm, CommentForm, SearchForm
 
 
 def post_list(request, tag_slug=None):
@@ -31,6 +32,26 @@ def post_list(request, tag_slug=None):
     return render(request, 'blog/post/list.html', {'page': page,
                                                    'posts': posts,
                                                    'tag': tag})
+
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            A = 1.0
+            B = 0.4
+            results = Post.published.annotate(
+                similarity=(A/(A+B) * TrigramSimilarity('title', query) +
+                            B/(A+B) * TrigramSimilarity('body', query)
+                            ),
+            ).filter(similarity__gt=0.03).order_by('-similarity')
+    return render(request, 'blog/post/search.html', {'form': form,
+                                                     'query': query,
+                                                     'results': results})
 
 
 class PostDetailView(View):
